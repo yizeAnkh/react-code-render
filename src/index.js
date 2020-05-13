@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Button, Space } from 'antd';
 import 'antd/dist/antd.css';
 
 import App from './App';
@@ -32,11 +31,11 @@ ReactDOM.render(
 ReactDOM.render(
 	<React.StrictMode>
 		<h2>编辑框1</h2>
-		<App code={codeStr} dependencies={{ Button, Space }} />
+		<App code={codeStr} />
 		<h2>编辑框2</h2>
-		<App code={codeStr2} dependencies={{ Button }} />
+		<App code={codeStr2} />
 		<h2>编辑框3</h2>
-		<App dependencies={{ Button }} />
+		<App />
 	</React.StrictMode>,
 	document.getElementById('root'),
 );

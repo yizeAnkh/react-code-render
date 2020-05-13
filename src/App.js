@@ -6,6 +6,8 @@ import { transform } from '@babel/standalone';
 import RemoveImports from 'babel-plugin-transform-remove-imports';
 import TransformClass from '@babel/plugin-transform-classes';
 
+import * as Antd from 'antd';
+
 import './App.css';
 // jsx转换为js
 async function babelTransform(input) {
@@ -30,31 +32,30 @@ class App extends Component {
 	}
 	// 获取要加载的antd的模块
 	getImportArr(codeStr) {
-		let reg0 = new RegExp("import.+from 'antd'", 'g');
-		let arr1 = codeStr.match(reg0);
+		const reg0 = new RegExp("import.+from 'antd'", 'g');
+		const arr1 = codeStr.match(reg0) || [];
 		let arr2 = [];
 		arr1.forEach((ele) => {
-			let reg1 = new RegExp('{.+}', 'g');
+			const reg1 = new RegExp('{.+}', 'g');
 			let a = ele.match(reg1)[0];
 			a = a.replace(/^{/, '').replace(/}$/, '').replace(/ /g, '');
-			arr2= a.split(",")
+			arr2 = a.split(',');
 		});
 		return arr2;
 	}
 	async executeCode(codeStr) {
 		// console.log(codeStr);
 		try {
-			/* // 尝试根据codestr 获取要加载的ui模块
-			let importArr = this.getImportArr(codeStr);
-			console.log(importArr); */
-
 			const args = ['context', 'React', 'ReactDOM', 'Component'];
 			const argv = [this, React, ReactDOM, Component];
-			const Elm = this.props.dependencies; //要加载的ui模块
-			for (const key in Elm) {
-				args.push(key);
-				argv.push(Elm[key]);
-			}
+
+			// 尝试根据codestr 获取要加载的ui模块
+			const importArr = this.getImportArr(codeStr);
+			importArr.forEach((ele) => {
+				args.push(ele);
+				argv.push(Antd[ele]);
+			});
+
 			codeStr = codeStr.replace('_mount_', `document.getElementById('${this.state.playerId}')`);
 			const input = `${codeStr}`;
 			// console.log(input);
